@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Settle - Expense Settlement PWA">
+  <meta name="theme-color" content="#2563eb">
+  <title>Settle - Expense Settlement</title>
+  
+  <!-- PWA Manifest -->
+  <!-- <link rel="manifest" href="manifest.json"> -->
+  
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" href="icon-192.png">
+  
+  <style>
+    /* CSS Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary-color: #2563eb;
+      --primary-dark: #1e40af;
+      --background: #f8fafc;
+      --surface: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --error: #ef4444;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--background);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Mobile-First Layout */
+    .container {
+      max-width: 100%;
+      padding: 1rem;
+      margin: 0 auto;
+    }
+    
+    /* Header */
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    /* Main Content */
+    main {
+      flex: 1;
+      padding: 1rem;
+    }
+    
+    /* Card Component */
+    .card {
+      background-color: var(--surface);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    
+    /* Button Styles */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+    
+    /* Input Styles */
+    .input-group {
+      margin-bottom: 1rem;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-family: inherit;
+      background-color: var(--surface);
+      transition: border-color 0.2s;
+    }
+    
+    .input-group input:focus,
+    .input-group select:focus,
+    .input-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+    
+    /* List Styles */
+    .expense-list {
+      list-style: none;
+    }
+    
+    .expense-item {
+      background-color: var(--surface);
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    /* Bottom Navigation */
+    .bottom-nav {
+      background-color: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 0.75rem 0;
+      position: sticky;
+      bottom: 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .bottom-nav nav {
+      display: flex;
+      justify-content: space-around;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      padding: 0.5rem;
+      transition: color 0.2s;
+    }
+    
+    .nav-item:hover,
+    .nav-item.active {
+      color: var(--primary-color);
+    }
+    
+    /* Responsive Design - Tablet and Desktop */
+    @media (min-width: 640px) {
+      .container {
+        max-width: 640px;
+        padding: 1.5rem;
+      }
+      
+      main {
+        padding: 1.5rem;
+      }
+      
+      .btn {
+        width: auto;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .container {
+        max-width: 768px;
+      }
+      
+      header h1 {
+        font-size: 1.875rem;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 1024px;
+      }
+    }
+    
+    /* Loading State */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .loading.active {
+      display: block;
+    }
+    
+    /* Utility Classes */
+    .text-center {
+      text-align: center;
+    }
+    
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <h1>💰 Settle</h1>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <!-- Welcome Section -->
+      <div class="card">
+        <h2>Welcome to Settle</h2>
+        <p>Easily track and settle expenses with friends and groups.</p>
+      </div>
+
+      <!-- Expense Input Form -->
+      <div class="card">
+        <h3>Add New Expense</h3>
+        <form id="expense-form">
+          <div class="input-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" placeholder="e.g., Dinner at restaurant" required>
+          </div>
+          
+          <div class="input-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" placeholder="0.00" step="0.01" required>
+          </div>
+          
+          <div class="input-group">
+            <label for="paidBy">Paid By</label>
+            <input type="text" id="paidBy" name="paidBy" placeholder="Your name" required>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">Add Expense</button>
+        </form>
+      </div>
+
+      <!-- Expense List -->
+      <div class="card">
+        <h3>Recent Expenses</h3>
+        <ul class="expense-list" id="expense-list">
+          <!-- Expenses will be dynamically added here -->
+          <li class="text-center" style="color: var(--text-secondary); padding: 2rem;">
+            No expenses yet. Add your first expense above!
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <nav>
+      <a href="#" class="nav-item active">
+        <span>🏠</span>
+        <span>Home</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span>👥</span>
+        <span>Groups</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span>⚖️</span>
+        <span>Settle</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span>⚙️</span>
+        <span>Settings</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Service Worker Registration -->
+  <!-- <script>
+    // Service worker will be registered here
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => console.log('SW registered:', registration))
+        .catch(error => console.log('SW registration failed:', error));
+    }
+  </script> -->
+
+  <!-- Main Application Logic -->
+  <!-- <script src="app.js"></script> -->
+  
+  <script>
+    // Placeholder for main application logic
+    // TODO: Implement expense tracking functionality
+    // TODO: Implement local storage/IndexedDB for offline support
+    // TODO: Implement settlement calculations
+    // TODO: Implement group management
+    
+    // Basic form handling example
+    document.getElementById('expense-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Form submission logic will go here
+      console.log('Expense form submitted');
+    });
+  </script>
+</body>
+</html>
