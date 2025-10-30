@@ -1,352 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Settle - Expense Settlement PWA">
-  <meta name="theme-color" content="#2563eb">
-  <title>Settle - Expense Settlement</title>
-  
-  <!-- PWA Manifest -->
-  <!-- <link rel="manifest" href="manifest.json"> -->
-  
-  <!-- Apple Touch Icon -->
-  <link rel="apple-touch-icon" href="icon-192.png">
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Settle - Luxury PWA Banking & Expense Settlement UI" />
+  <meta name="theme-color" content="#0B0B10" />
+  <title>Settle • Luxury PWA Banking</title>
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="color-scheme" content="dark light">
   <style>
-    /* CSS Reset & Base Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    /* Luxury Dark Theme */
     :root {
-      --primary-color: #2563eb;
-      --primary-dark: #1e40af;
-      --background: #f8fafc;
-      --surface: #ffffff;
-      --text-primary: #0f172a;
-      --text-secondary: #64748b;
-      --border: #e2e8f0;
-      --success: #10b981;
-      --error: #ef4444;
-      --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+      --gold: #d4af37;
+      --gold-2: #b88a2a;
+      --ink: #0b0b10;
+      --ink-2: #12121a;
+      --ink-3: #181823;
+      --card: #0f0f16;
+      --text: #f5f5f7;
+      --muted: #a1a1aa;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
     }
-    
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background-color: var(--background);
-      color: var(--text-primary);
-      line-height: 1.6;
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 100% -10%, rgba(212,175,55,.06), transparent 60%),
+                  radial-gradient(1000px 600px at -20% 110%, rgba(212,175,55,.05), transparent 60%),
+                  linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
-    
-    /* Mobile-First Layout */
-    .container {
-      max-width: 100%;
-      padding: 1rem;
-      margin: 0 auto;
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 960px; margin: 0 auto; padding: 16px; }
+
+    /* Top app bar */
+    header.appbar {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(12,12,18,.85), rgba(12,12,18,.55));
+      border-bottom: 1px solid rgba(212,175,55,.12);
     }
-    
-    /* Header */
-    header {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 1rem;
-      box-shadow: var(--shadow);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    .brand {
+      display: flex; align-items: center; gap: 12px; font-weight: 600; letter-spacing: .6px;
     }
-    
-    header h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
+    .brand .logo {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 6px 18px rgba(212,175,55,.25);
     }
-    
-    /* Main Content */
-    main {
-      flex: 1;
-      padding: 1rem;
-    }
-    
-    /* Card Component */
+    .brand span { color: var(--text); font-size: 18px; }
+
+    /* Cards */
+    .grid { display: grid; gap: 16px; }
+    @media (min-width: 720px) { .grid { grid-template-columns: 1.2fr .8fr; } }
     .card {
-      background-color: var(--surface);
-      border-radius: 0.5rem;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--card), var(--ink-3));
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
     }
-    
-    /* Button Styles */
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      width: 100%;
-      margin-top: 0.5rem;
+    .card-title { display:flex; align-items:center; justify-content:space-between; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 10px; }
+
+    /* Premium balance card */
+    .balance {
+      background: radial-gradient(600px 300px at 100% 0%, rgba(212,175,55,.18), transparent),
+                  linear-gradient(180deg, #0d0d14, #12121a 60%, #0f0f16);
+      border: 1px solid rgba(212,175,55,.2);
+      padding: 20px; border-radius: 18px; overflow: hidden; position: relative;
     }
-    
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: white;
+    .balance .amount { font-size: 38px; font-weight: 700; letter-spacing: .5px; }
+    .chip { font-size: 12px; padding: 6px 10px; border: 1px solid rgba(212,175,55,.35); border-radius: 999px; color: var(--gold); background: rgba(212,175,55,.08); }
+
+    /* Inputs */
+    .field { display:flex; flex-direction:column; gap:8px; }
+    label { color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    input, select, textarea {
+      background: #0e0e15; color: var(--text); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px; padding: 12px 14px; outline: none; transition: border-color .2s, box-shadow .2s;
     }
-    
-    .btn-primary:hover {
-      background-color: var(--primary-dark);
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212,175,55,.10); }
+
+    /* Buttons */
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:10px; border-radius: 12px; padding: 12px 16px; border: 1px solid rgba(212,175,55,.35); color: #0c0c12; background: linear-gradient(135deg, var(--gold), var(--gold-2)); font-weight: 600; cursor:pointer; transition: transform .08s ease;
     }
-    
-    .btn-primary:active {
-      transform: scale(0.98);
+    .btn:active { transform: translateY(1px); }
+    .btn.secondary { background: transparent; color: var(--gold); border-color: rgba(212,175,55,.25); }
+
+    /* List */
+    .list { display:flex; flex-direction:column; gap:12px; margin:0; padding:0; list-style:none; }
+    .row { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:#0e0e15; border:1px solid rgba(255,255,255,.06); }
+    .row .l { display:flex; align-items:center; gap:12px; }
+    .avatar { width:36px; height:36px; border-radius:50%; background: linear-gradient(135deg, #2b2b36, #1a1a24); border:1px solid rgba(255,255,255,.06); }
+    .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+    /* Bottom nav */
+    .bottom {
+      position: sticky; bottom: 0; z-index: 40; border-top: 1px solid rgba(212,175,55,.12);
+      background: linear-gradient(0deg, rgba(12,12,18,.85), rgba(12,12,18,.55));
+      backdrop-filter: blur(10px);
     }
-    
-    /* Input Styles */
-    .input-group {
-      margin-bottom: 1rem;
-    }
-    
-    .input-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-    
-    .input-group input,
-    .input-group select,
-    .input-group textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      font-family: inherit;
-      background-color: var(--surface);
-      transition: border-color 0.2s;
-    }
-    
-    .input-group input:focus,
-    .input-group select:focus,
-    .input-group textarea:focus {
-      outline: none;
-      border-color: var(--primary-color);
-    }
-    
-    /* List Styles */
-    .expense-list {
-      list-style: none;
-    }
-    
-    .expense-item {
-      background-color: var(--surface);
-      padding: 1rem;
-      margin-bottom: 0.5rem;
-      border-radius: 0.5rem;
-      border: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    /* Bottom Navigation */
-    .bottom-nav {
-      background-color: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 0.75rem 0;
-      position: sticky;
-      bottom: 0;
-      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-    }
-    
-    .bottom-nav nav {
-      display: flex;
-      justify-content: space-around;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: var(--text-secondary);
-      font-size: 0.75rem;
-      padding: 0.5rem;
-      transition: color 0.2s;
-    }
-    
-    .nav-item:hover,
-    .nav-item.active {
-      color: var(--primary-color);
-    }
-    
-    /* Responsive Design - Tablet and Desktop */
-    @media (min-width: 640px) {
-      .container {
-        max-width: 640px;
-        padding: 1.5rem;
-      }
-      
-      main {
-        padding: 1.5rem;
-      }
-      
-      .btn {
-        width: auto;
-      }
-    }
-    
-    @media (min-width: 768px) {
-      .container {
-        max-width: 768px;
-      }
-      
-      header h1 {
-        font-size: 1.875rem;
-      }
-    }
-    
-    @media (min-width: 1024px) {
-      .container {
-        max-width: 1024px;
-      }
-    }
-    
-    /* Loading State */
-    .loading {
-      display: none;
-      text-align: center;
-      padding: 2rem;
-    }
-    
-    .loading.active {
-      display: block;
-    }
-    
-    /* Utility Classes */
-    .text-center {
-      text-align: center;
-    }
-    
-    .mt-1 { margin-top: 0.5rem; }
-    .mt-2 { margin-top: 1rem; }
-    .mb-1 { margin-bottom: 0.5rem; }
-    .mb-2 { margin-bottom: 1rem; }
+    .tabs { display:flex; justify-content:space-around; padding: 8px 6px; }
+    .tab { display:flex; flex-direction:column; align-items:center; gap:6px; color: var(--muted); font-size: 12px; padding: 8px 10px; border-radius: 10px; }
+    .tab.active { color: var(--gold); background: rgba(212,175,55,.08); border: 1px solid rgba(212,175,55,.25); }
+
+    .muted { color: var(--muted); }
+    .spacer { height: 12px; }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="container">
-      <h1>💰 Settle</h1>
+  <header class="appbar">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <span>Settle</span>
+      </div>
+      <div class="chip">PWA</div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main>
-    <div class="container">
-      <!-- Welcome Section -->
-      <div class="card">
-        <h2>Welcome to Settle</h2>
-        <p>Easily track and settle expenses with friends and groups.</p>
-      </div>
+  <main class="container">
+    <div class="grid">
+      <section class="card balance" aria-label="Account overview">
+        <div class="card-title">
+          <span>Available balance</span>
+          <span class="chip mono">••• 8821</span>
+        </div>
+        <div class="amount mono">₹ 82,450.23</div>
+        <div class="spacer"></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn" id="add-expense">Add expense</button>
+          <button class="btn secondary" id="settle-btn">Settle up</button>
+        </div>
+      </section>
 
-      <!-- Expense Input Form -->
-      <div class="card">
-        <h3>Add New Expense</h3>
-        <form id="expense-form">
-          <div class="input-group">
-            <label for="description">Description</label>
-            <input type="text" id="description" name="description" placeholder="e.g., Dinner at restaurant" required>
-          </div>
-          
-          <div class="input-group">
-            <label for="amount">Amount</label>
-            <input type="number" id="amount" name="amount" placeholder="0.00" step="0.01" required>
-          </div>
-          
-          <div class="input-group">
-            <label for="paidBy">Paid By</label>
-            <input type="text" id="paidBy" name="paidBy" placeholder="Your name" required>
-          </div>
-          
-          <button type="submit" class="btn btn-primary">Add Expense</button>
-        </form>
-      </div>
-
-      <!-- Expense List -->
-      <div class="card">
-        <h3>Recent Expenses</h3>
-        <ul class="expense-list" id="expense-list">
-          <!-- Expenses will be dynamically added here -->
-          <li class="text-center" style="color: var(--text-secondary); padding: 2rem;">
-            No expenses yet. Add your first expense above!
-          </li>
-        </ul>
-      </div>
+      <section class="card" aria-label="Quick transfer">
+        <div class="card-title"><span>Quick transfer</span></div>
+        <div class="field">
+          <label for="to">Recipient</label>
+          <input id="to" placeholder="Name or UPI" />
+        </div>
+        <div class="spacer"></div>
+        <div class="field">
+          <label for="amt">Amount</label>
+          <input id="amt" type="number" inputmode="decimal" placeholder="0.00" />
+        </div>
+        <div class="spacer"></div>
+        <button class="btn">Send securely</button>
+      </section>
     </div>
+
+    <section class="card" aria-label="Recent expenses">
+      <div class="card-title"><span>Recent expenses</span><a class="muted" href="#">View all</a></div>
+      <ul class="list" id="expense-list">
+        <li class="row">
+          <div class="l">
+            <div class="avatar" aria-hidden="true"></div>
+            <div>
+              <div>Dinner at Atelier</div>
+              <div class="muted">Paid by Arjun • 2 shares</div>
+            </div>
+          </div>
+          <div class="mono">₹ 4,200</div>
+        </li>
+        <li class="row">
+          <div class="l">
+            <div class="avatar" aria-hidden="true"></div>
+            <div>
+              <div>Weekend villa</div>
+              <div class="muted">Paid by Mira • 5 shares</div>
+            </div>
+          </div>
+          <div class="mono">₹ 18,500</div>
+        </li>
+        <li class="row">
+          <div class="l">
+            <div class="avatar" aria-hidden="true"></div>
+            <div>
+              <div>Airport cab</div>
+              <div class="muted">Paid by You • 3 shares</div>
+            </div>
+          </div>
+          <div class="mono">₹ 1,260</div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="card" aria-label="Add expense">
+      <div class="card-title"><span>Add expense</span></div>
+      <form id="expense-form" class="grid" style="grid-template-columns:1fr 1fr;">
+        <div class="field" style="grid-column:1 / -1">
+          <label for="desc">Description</label>
+          <input id="desc" name="description" required placeholder="e.g., Chef's table" />
+        </div>
+        <div class="field">
+          <label for="amount">Amount</label>
+          <input id="amount" name="amount" type="number" inputmode="decimal" step="0.01" required placeholder="0.00" />
+        </div>
+        <div class="field">
+          <label for="payer">Paid by</label>
+          <input id="payer" name="paidBy" required placeholder="Your name" />
+        </div>
+        <div style="grid-column:1 / -1; display:flex; gap:10px;">
+          <button class="btn" type="submit">Add</button>
+          <button class="btn secondary" type="reset">Reset</button>
+        </div>
+      </form>
+    </section>
   </main>
 
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <nav>
-      <a href="#" class="nav-item active">
-        <span>🏠</span>
-        <span>Home</span>
-      </a>
-      <a href="#" class="nav-item">
-        <span>👥</span>
-        <span>Groups</span>
-      </a>
-      <a href="#" class="nav-item">
-        <span>⚖️</span>
-        <span>Settle</span>
-      </a>
-      <a href="#" class="nav-item">
-        <span>⚙️</span>
-        <span>Settings</span>
-      </a>
-    </nav>
-  </div>
+  <nav class="bottom" aria-label="Primary">
+    <div class="container tabs">
+      <a class="tab active" href="#home" aria-current="page">Home</a>
+      <a class="tab" href="#groups">Groups</a>
+      <a class="tab" href="#settle">Settle</a>
+      <a class="tab" href="#settings">Settings</a>
+    </div>
+  </nav>
 
-  <!-- Service Worker Registration -->
-  <!-- <script>
-    // Service worker will be registered here
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => console.log('SW registered:', registration))
-        .catch(error => console.log('SW registration failed:', error));
-    }
-  </script> -->
-
-  <!-- Main Application Logic -->
-  <!-- <script src="app.js"></script> -->
-  
   <script>
-    // Placeholder for main application logic
-    // TODO: Implement expense tracking functionality
-    // TODO: Implement local storage/IndexedDB for offline support
-    // TODO: Implement settlement calculations
-    // TODO: Implement group management
-    
-    // Basic form handling example
-    document.getElementById('expense-form')?.addEventListener('submit', (e) => {
+    // Minimal in-page behavior for demo
+    const list = document.getElementById('expense-list');
+    const form = document.getElementById('expense-form');
+    form?.addEventListener('submit', (e) => {
       e.preventDefault();
-      // Form submission logic will go here
-      console.log('Expense form submitted');
+      const data = new FormData(form);
+      const desc = data.get('description');
+      const amount = Number(data.get('amount') || 0).toFixed(2);
+      const paidBy = data.get('paidBy');
+      const li = document.createElement('li');
+      li.className = 'row';
+      li.innerHTML = `
+        <div class="l">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <div>${desc}</div>
+            <div class="muted">Paid by ${paidBy} • 2 shares</div>
+          </div>
+        </div>
+        <div class="mono">₹ ${amount}</div>`;
+      list?.prepend(li);
+      form.reset();
     });
+
+    // PWA Service Worker registration (optional)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>
